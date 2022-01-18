@@ -1,7 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 function Weather() {
+  let today = new Date();
+  let date =
+    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+
+  const [input, setInput] = useState("");
+  const [weather, setWeather] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [dateToday, setDateToday] = useState(date);
+
+  const api = {
+    url: "http://api.openweathermap.org/data/2.5/",
+    key: "06736dc6d5bad1f991b443cedc500e96",
+  };
+
+  const getInput = (e) => {
+    setInput(e.target.value);
+  };
+
+  const iconURL = "http://openweathermap.org/img/w/";
+
+  const getWeatherData = (e) => {
+    if (e.key === "Enter" && input === "") {
+      setErrorMsg("You haven't added any city name");
+      setError(true);
+    }
+    if (e.key === "Enter" && input !== "") {
+      setIsLoading(true);
+      setError(true);
+      fetch(`${api.url}weather?q=${input}&units=metric&APPID=${api.key}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw Error("Failed to Fetch Data or Invalid City Name");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setWeather(data);
+          setInput("");
+          setError(false);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err.message);
+          setError(true);
+          setErrorMsg(err.message);
+          setIsLoading(false);
+        });
+    }
+  };
   return (
     <Wrapper>
       <div className="container">
@@ -9,27 +61,46 @@ function Weather() {
           {/* TITLE AND DATE DIV */}
           <div className="header">
             <h1>Daily Forecast</h1>
-            <p>2021-12-24</p>
+            <p>{dateToday}</p>
           </div>
 
           {/* SEARCH BOX */}
           <div className="form__box">
-            <input type="text" placeholder="Search city name" />
+            <input
+              type="text"
+              placeholder="Search city name"
+              onChange={getInput}
+              value={input}
+              onKeyPress={getWeatherData}
+            />
           </div>
 
-          {/* Result Container */}
-          <div className="result__box">
-            <h2>Abuja</h2>
-            <div className="image__box">
-              <img src="#" alt="..." />
-            </div>
+          {error ? (
+            <p className={errorMsg !== "" ? "error" : " "}>{errorMsg}</p>
+          ) : (
+            <div className="result__box">
+              <h2>
+                {weather.name}, {weather.sys.country}
+              </h2>
+              <div className="image__box">
+                <img
+                  src={iconURL + weather.weather[0].icon + ".png"}
+                  alt={weather.weather[0].main}
+                />
+              </div>
 
-            <div className="result__container">
-              <p>Temp: 23&#176; C</p>
-              <p>Weather: Clouds</p>
-              <p>Temp Range: 23&#176;C / 23&#176;C</p>
+              <div className="result__container">
+                <p>Temp: {Math.round(weather.main.temp)}&#176; C</p>
+                <p>Weather: {weather.weather[0].main}</p>
+                <p>
+                  Temp Range: {Math.round(weather.main.temp_min)}&#176;C /{" "}
+                  {Math.round(weather.main.temp_max)}&#176;C
+                </p>
+              </div>
             </div>
-          </div>
+          )}
+
+          {isLoading && <h3 className="loader"></h3>}
         </div>
       </div>
     </Wrapper>
@@ -64,7 +135,7 @@ const Wrapper = styled.section`
       background-position: bottom;
 
       .header {
-        margin: 50px 0px 40px 0px;
+        margin: 30px 0px 40px 0px;
         text-align: center;
         color: black;
         font-size: 30px;
@@ -92,7 +163,7 @@ const Wrapper = styled.section`
       }
 
       .result__box {
-        margin: 60px 0px 0px 0px;
+        margin: 40px 0px 0px 0px;
         text-align: center;
         font-size: 20px;
         transition: 1s;
@@ -100,7 +171,9 @@ const Wrapper = styled.section`
           font-family: var(--font-header);
         }
         .image__box {
-          border: 2px solid red;
+          img {
+            width: 17%;
+          }
         }
 
         .result__container {
