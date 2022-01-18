@@ -134,8 +134,15 @@ const Wrapper = styled.section`
       background-size: var(--100vh);
       background-position: bottom;
 
+      @media only screen and (max-width: 2560px) {
+        border: 2px solid rgb(37, 150, 190);
+        width: 100%;
+        max-width: 2560px;
+        height: 100%;
+      }
+
       .header {
-        margin: 30px 0px 40px 0px;
+        margin: 10px 0px 40px 0px;
         text-align: center;
         color: black;
         font-size: 30px;
@@ -151,6 +158,9 @@ const Wrapper = styled.section`
       .form__box {
         width: 100%;
         margin-left: 60px;
+        @media only screen and (min-width: 768px) {
+          margin-left: 110px;
+        }
 
         input[type="text"] {
           border: 2px solid grey;
@@ -160,13 +170,21 @@ const Wrapper = styled.section`
           font-family: var(--font-body);
           font-size: 25px;
         }
+
+        input[type="text"]:focus {
+          border: 2px solid rgb(37, 150, 190);
+        }
       }
 
       .result__box {
-        margin: 40px 0px 0px 0px;
+        margin: 20px 0px 0px 0px;
         text-align: center;
         font-size: 20px;
         transition: 1s;
+        @media only screen and (min-width: 768px) {
+          margin-top: 50px;
+        }
+
         h2 {
           font-family: var(--font-header);
         }
@@ -179,6 +197,9 @@ const Wrapper = styled.section`
         .result__container {
           margin: 10px 0px;
           font-size: 30px;
+          @media only screen and (min-width: 768px) {
+            font-size: 40px;
+          }
           p {
             font-family: var(--font-body);
           }

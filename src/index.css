@@ -13,7 +13,7 @@
 }
 
 .error {
-  background: rgb(91, 91, 214);
+  background: rgb(37, 150, 190);
   padding: 1rem;
   color: white;
   font-family: var(--font-body);
@@ -24,7 +24,7 @@
   margin: 100px 0px 0px 150px;
   border: 8px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 8px solid black;
+  border-top: 8px solid rgb(37, 150, 190);
   width: 50px;
   height: 50px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
